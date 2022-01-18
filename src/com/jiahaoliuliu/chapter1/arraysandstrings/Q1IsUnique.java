@@ -32,8 +32,14 @@ public class Q1IsUnique {
     }
 
     /**
-     * Time complexity = 128
-     * Space complexity = 1
+     * Time complexity = O(128)
+     * Space complexity = O(1)
+     *
+     * If the charset is not fixed
+     * Time complexity = O(min(c, n))
+     * - where c is the size of the char set
+     * Space complecity = O(c)
+     *
      * @param word
      * @return
      */
@@ -86,6 +92,13 @@ public class Q1IsUnique {
         }
         return true;
     }
+
+    /**
+     * If we cannot use additional data structure, we need to compare each one of the characters with the rest of the elements
+     * of the string, which makes the complexity O(n!)
+     *
+     * Another way is sort each one of the elements with complexity O(n log(n)) then compare neighbors with neighbors
+     */
 
     @Test
     public void test1() {
