@@ -20,21 +20,22 @@ public class Q1MyFlexibleSizeThreeStacks {
 
     private final boolean[] usedPositions;
 
-    public Q1MyFlexibleSizeThreeStacks(int individualCapacity) {
-        data = new Integer[individualCapacity * 3];
+    private final int numberOfStacks;
 
-        StackPointer firstStackPointer = new StackPointer(new Integer[individualCapacity * 3], -1);
-        StackPointer secondStackPointer = new StackPointer(new Integer[individualCapacity * 3], -1);
-        StackPointer thirdStackPointer = new StackPointer(new Integer[individualCapacity * 3], -1);
-        stackPointersArray = new StackPointer[] {firstStackPointer, secondStackPointer, thirdStackPointer};
-
-        usedPositions = new boolean[individualCapacity * 3];
+    public Q1MyFlexibleSizeThreeStacks(int individualCapacity, int numberOfStacks) {
+        this.data = new Integer[individualCapacity * numberOfStacks];
+        this.numberOfStacks = numberOfStacks;
+        stackPointersArray = new StackPointer[numberOfStacks];
+        for (int i = 0; i < numberOfStacks; i++) {
+            stackPointersArray[i] = new StackPointer(new Integer[individualCapacity * numberOfStacks], -1);
+        }
+        usedPositions = new boolean[individualCapacity * numberOfStacks];
     }
 
     public void push(int item, int stackNumber) {
         // Precondition
-        if (stackNumber < 1 || stackNumber > 3)
-            throw new IllegalStateException("The stack number must be between 1 and 3");
+        if (stackNumber < 1 || stackNumber > numberOfStacks)
+            throw new IllegalStateException("The stack number must be between 1 and " + numberOfStacks);
 
         int nextEmptyPosition = findNextEmptyPosition();
         // If it is full
@@ -53,8 +54,8 @@ public class Q1MyFlexibleSizeThreeStacks {
     public int pop(int stackNumber) {
         // if it is empty
         if (isEmpty()) throw new EmptyStackException();
-        if (stackNumber < 1 || stackNumber > 3)
-            throw new IllegalStateException("The stack number must be between 1 and 3");
+        if (stackNumber < 1 || stackNumber > numberOfStacks)
+            throw new IllegalStateException("The stack number must be between 1 and " + numberOfStacks);
 
         // Find the item
         StackPointer stackPointer = stackPointersArray[stackNumber - 1];
@@ -69,8 +70,8 @@ public class Q1MyFlexibleSizeThreeStacks {
     public int peek(int stackNumber) {
         // if it is empty
         if (isEmpty()) throw new EmptyStackException();
-        if (stackNumber < 1 || stackNumber > 3)
-            throw new IllegalStateException("The stack number must be between 1 and 3");
+        if (stackNumber < 1 || stackNumber > numberOfStacks)
+            throw new IllegalStateException("The stack number must be between 1 and " + numberOfStacks);
 
         // Find the item
         StackPointer stackPointer = stackPointersArray[stackNumber - 1];

@@ -207,7 +207,8 @@ public class Q1ThreeInOne {
     public void testTripleStackFlexible1() {
         // Given
         int capacity = 5;
-        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity);
+        int numberOfStacks = 3;
+        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity, numberOfStacks);
 
         // When
         boolean isStackEmpty = q1MyFlexibleSizeThreeStacks.isEmpty();
@@ -220,7 +221,8 @@ public class Q1ThreeInOne {
     public void testTripleStackFlexible2() {
         // Given
         int capacity = 5;
-        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity);
+        int numberOfStacks = 3;
+        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity, numberOfStacks);
         q1MyFlexibleSizeThreeStacks.push(1, 1);
 
         // When
@@ -234,7 +236,8 @@ public class Q1ThreeInOne {
     public void testTripleStackFlexible3() {
         // Given
         int capacity = 5;
-        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity);
+        int numberOfStacks = 3;
+        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity, numberOfStacks);
         q1MyFlexibleSizeThreeStacks.push(2, 2);
 
         // When
@@ -248,7 +251,8 @@ public class Q1ThreeInOne {
     public void testTripleStackFlexible4() {
         // Given
         int capacity = 5;
-        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity);
+        int numberOfStacks = 3;
+        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity, numberOfStacks);
         q1MyFlexibleSizeThreeStacks.push(3, 3);
 
         // When
@@ -262,7 +266,8 @@ public class Q1ThreeInOne {
     public void testTripleStackFlexible5() {
         // Given
         int capacity = 5;
-        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity);
+        int numberOfStacks = 3;
+        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity, numberOfStacks);
         q1MyFlexibleSizeThreeStacks.push(1, 1);
         q1MyFlexibleSizeThreeStacks.push(2, 2);
         q1MyFlexibleSizeThreeStacks.push(3, 3);
@@ -284,7 +289,8 @@ public class Q1ThreeInOne {
     public void testTripleStackFlexible6() {
         // Given
         int capacity = 5;
-        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity);
+        int numberOfStacks = 3;
+        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity, numberOfStacks);
         q1MyFlexibleSizeThreeStacks.push(1, 1);
         q1MyFlexibleSizeThreeStacks.push(2, 1);
         q1MyFlexibleSizeThreeStacks.push(3, 1);
@@ -315,7 +321,8 @@ public class Q1ThreeInOne {
     public void testTripleStackFlexible7Full() {
         // Given
         int capacity = 5;
-        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity);
+        int numberOfStacks = 3;
+        Q1MyFlexibleSizeThreeStacks q1MyFlexibleSizeThreeStacks = new Q1MyFlexibleSizeThreeStacks(capacity, numberOfStacks);
         q1MyFlexibleSizeThreeStacks.push(1, 1);
         q1MyFlexibleSizeThreeStacks.push(2, 1);
         q1MyFlexibleSizeThreeStacks.push(3, 1);
