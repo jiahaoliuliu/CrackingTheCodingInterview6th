@@ -144,7 +144,7 @@ public class Q4Partition {
         head.insert(1);
 
         // When
-        Node result = bookSol1partition(head, partition);
+        Node result = bookSol2Partition(head, partition);
 
         // Then
         assertTrue(result.getData() < partition);
