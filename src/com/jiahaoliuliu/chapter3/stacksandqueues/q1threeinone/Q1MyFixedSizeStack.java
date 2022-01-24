@@ -1,4 +1,4 @@
-package com.jiahaoliuliu.chapter3.stacksandqueues;
+package com.jiahaoliuliu.chapter3.stacksandqueues.q1threeinone;
 
 import java.util.EmptyStackException;
 

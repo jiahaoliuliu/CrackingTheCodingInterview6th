@@ -1,4 +1,4 @@
-package com.jiahaoliuliu.chapter3.stacksandqueues;
+package com.jiahaoliuliu.chapter3.stacksandqueues.q1threeinone;
 
 import org.junit.Test;
 
@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
  *  <li>58: Try thinking about the array as circular, such that the end of the array "wraps around" to the
  *          start of the array</li>
  * </ul>
- *
  */
 public class Q1ThreeInOne {
 
