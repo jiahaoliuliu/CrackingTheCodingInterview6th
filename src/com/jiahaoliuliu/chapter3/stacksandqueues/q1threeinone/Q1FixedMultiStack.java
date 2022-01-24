@@ -10,8 +10,6 @@ import java.util.EmptyStackException;
  * For stack 3, we will use [2n/3, n)
  */
 public class Q1FixedMultiStack {
-    static class FullStackException extends RuntimeException{}
-
     private static final int NUMBER_OF_STACKS = 3;
     private final int stackCapacity;
     private final int[] values;
