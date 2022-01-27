@@ -4,6 +4,7 @@ enum State { Unvisited, Visited, Visiting}
 
 public class Graph {
     public Node[] nodes;
+
 }
 
 class Node {
