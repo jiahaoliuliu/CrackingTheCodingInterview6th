@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
  */
 public class Q2MinimalTree {
 
-    private BinaryTree.Node binarySearchTree(int[] array) {
+    public BinaryTree.Node binarySearchTree(int[] array) {
         if (array.length == 0) return null;
         return binarySearchTree(array, 0, array.length - 1);
     }
