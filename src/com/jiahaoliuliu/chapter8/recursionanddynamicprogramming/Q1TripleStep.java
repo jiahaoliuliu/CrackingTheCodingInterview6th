@@ -176,7 +176,7 @@ public class Q1TripleStep {
 
     /**
      * Book solution 2 - Memorization
-     * All the solution overlows when n = 37
+     * All the solution overflows when n = 37
      */
     private int bookSol2CountWays(int n) {
         int[] memo = new int[n + 1];

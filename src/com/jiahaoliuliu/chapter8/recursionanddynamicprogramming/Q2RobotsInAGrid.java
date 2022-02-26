@@ -2,9 +2,7 @@ package com.jiahaoliuliu.chapter8.recursionanddynamicprogramming;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -67,19 +65,23 @@ public class Q2RobotsInAGrid {
         int columns = maze[0].length;
 
         List<Point> path = new ArrayList<>();
-        // Base case
-        if (columns == 0 || (rows == 1 && columns == 1)) {
+        // Base case. If there is only one item in the list
+        if (rows == 1 && columns == 1) {
             return path;
         }
 
-        return getPath(maze, 0, 0, path);
+        List<Point> correctPath = getPath(maze, 0, 0, path);
+        if  (correctPath != null) {
+            correctPath.add(new Point(maze.length - 1, maze[0].length - 1));
+        }
+
+        return correctPath;
     }
 
     // Recursive way
     private List<Point> getPath(boolean[][]maze, int row, int column, List<Point> existingPath) {
         // If we are at the last point of the maze, then finish
         if (row == maze.length - 1 && column == maze[0].length - 1) {
-            existingPath.add(new Point(maze.length - 1, maze[0].length - 1));
             return existingPath;
         }
 
@@ -140,6 +142,199 @@ public class Q2RobotsInAGrid {
         expected.add(new Point(0, 0));
         expected.add(new Point(1, 0));
         expected.add(new Point(1, 1));
+        assertEquals(expected, path);
+    }
+
+    @Test
+    public void test3() {
+        // Given
+        // Maze       [[ t, f, t ]
+        //             [ t, t, t ]]
+        boolean[][]maze = new boolean[2][3];
+        maze[0][0] = true;
+        maze[0][1] = false;
+        maze[0][2] = true;
+        maze[1][0] = true;
+        maze[1][1] = true;
+        maze[1][2] = true;
+
+        // When
+        List<Point> path = getPath(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        expected.add(new Point(1, 0));
+        expected.add(new Point(1, 1));
+        expected.add(new Point(1, 2));
+        assertEquals(expected, path);
+    }
+
+    @Test
+    public void test4() {
+        // Given
+        // Maze       [[ t, t, t ]
+        //             [ t, f, t ]]
+        boolean[][]maze = new boolean[2][3];
+        maze[0][0] = true;
+        maze[0][1] = true;
+        maze[0][2] = true;
+        maze[1][0] = true;
+        maze[1][1] = false;
+        maze[1][2] = true;
+
+        // When
+        List<Point> path = getPath(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        expected.add(new Point(0, 1));
+        expected.add(new Point(0, 2));
+        expected.add(new Point(1, 2));
+        assertEquals(expected, path);
+    }
+
+    /**
+     * The dynamic programming solution
+     * [[   ,  F  , F   ],
+     *  [   ,  F  ,    ],
+     *  [   ,    ,    ]]
+     * It is better start from the finish point and then, advance to the starting point (0, 0)
+     * Building a cache where per each point of the map we add a list?
+     *
+     * Time complexity: In the worse case scenario, we need to build the memory passing by all the cells. O(n)
+     * Space complexity: In the worse case scenario, the size of the memory is n, where n = maze.row * maze.column
+     *                  And per each entry of the map, we have up to list of all the points
+     *                  so the space is O(n^n)
+     * @param maze
+     * @return
+     */
+    private static List<Point> getPathDp(boolean[][] maze) {
+        Map<Point, List<Point>> memory = new HashMap<>();
+        int row = maze.length - 1;
+        int col = maze[0].length - 1;
+        List<Point> path = new ArrayList<>();
+        fillMemory(maze, row, col, path, memory);
+        List<Point> reversedPath = memory.get(new Point(0, 0));
+        Collections.reverse(reversedPath);
+        return reversedPath;
+    }
+
+    private static void fillMemory(boolean[][]maze, int row, int col, List<Point> actualPath, Map<Point, List<Point>> memory) {
+        // Finish if we found the origin
+        if (row == 0 && col== 0) {
+            Point origin = new Point(row, col);
+            actualPath.add(origin);
+            memory.put(origin, actualPath);
+            return;
+        }
+
+        // if we are out of bounds, finish
+        if (row < 0 || col < 0) {
+            return;
+        }
+
+        // if the current path is possible, add it to the point
+        if (maze[row][col]) {
+            Point currentPoint = new Point(row, col);
+            actualPath.add(currentPoint);
+            memory.put(currentPoint, actualPath);
+        } else {
+            return;
+        }
+
+        // Try it for the upper cell
+        fillMemory(maze, row-1, col, new ArrayList<>(actualPath), memory);
+
+        // Try it for the left cell
+        fillMemory(maze, row, col - 1, new ArrayList<>(actualPath), memory);
+    }
+
+    @Test
+    public void testGetPathDp1() {
+        // Given
+        boolean[][]maze = new boolean[1][1];
+        maze[0][0] = true;
+
+        // When
+        List<Point> path = getPathDp(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        assertEquals(expected, path);
+    }
+
+    @Test
+    public void testGetPathDp2() {
+        // Given
+        // Maze       [[ t, f ]
+        //             [ t, t ]]
+        boolean[][]maze = new boolean[2][2];
+        maze[0][0] = true;
+        maze[0][1] = false;
+        maze[1][0] = true;
+        maze[1][1] = true;
+
+        // When
+        List<Point> path = getPathDp(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        expected.add(new Point(1, 0));
+        expected.add(new Point(1, 1));
+        assertEquals(expected, path);
+    }
+
+    @Test
+    public void testGetPathDp3() {
+        // Given
+        // Maze       [[ t, f, t ]
+        //             [ t, t, t ]]
+        boolean[][]maze = new boolean[2][3];
+        maze[0][0] = true;
+        maze[0][1] = false;
+        maze[0][2] = true;
+        maze[1][0] = true;
+        maze[1][1] = true;
+        maze[1][2] = true;
+
+        // When
+        List<Point> path = getPathDp(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        expected.add(new Point(1, 0));
+        expected.add(new Point(1, 1));
+        expected.add(new Point(1, 2));
+        assertEquals(expected, path);
+    }
+
+    @Test
+    public void testGetPathDp4() {
+        // Given
+        // Maze       [[ t, t, t ]
+        //             [ t, f, t ]]
+        boolean[][]maze = new boolean[2][3];
+        maze[0][0] = true;
+        maze[0][1] = true;
+        maze[0][2] = true;
+        maze[1][0] = true;
+        maze[1][1] = false;
+        maze[1][2] = true;
+
+        // When
+        List<Point> path = getPathDp(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        expected.add(new Point(0, 1));
+        expected.add(new Point(0, 2));
+        expected.add(new Point(1, 2));
         assertEquals(expected, path);
     }
 
