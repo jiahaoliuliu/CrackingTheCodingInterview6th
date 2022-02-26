@@ -211,6 +211,7 @@ public class Q2RobotsInAGrid {
      * @return
      */
     private static List<Point> getPathDp(boolean[][] maze) {
+        if (maze == null || maze.length == 0) return null;
         Map<Point, List<Point>> memory = new HashMap<>();
         int row = maze.length - 1;
         int col = maze[0].length - 1;
@@ -230,14 +231,14 @@ public class Q2RobotsInAGrid {
             return;
         }
 
-        // if we are out of bounds, finish
-        if (row < 0 || col < 0) {
+        // if we are out of bounds or the current point has been visited, finish
+        Point currentPoint = new Point(row, col);
+        if (row < 0 || col < 0 || memory.containsKey(currentPoint)) {
             return;
         }
 
         // if the current path is possible, add it to the point
         if (maze[row][col]) {
-            Point currentPoint = new Point(row, col);
             actualPath.add(currentPoint);
             memory.put(currentPoint, actualPath);
         } else {
@@ -337,5 +338,254 @@ public class Q2RobotsInAGrid {
         expected.add(new Point(1, 2));
         assertEquals(expected, path);
     }
+
+    /**
+     * Book solution 1
+     *
+     * O(2^(r + c))
+     */
+    ArrayList<Point> bookSol1GetPath(boolean[][] maze) {
+        if (maze == null || maze.length == 0) return null;
+        ArrayList<Point> path = new ArrayList<>();
+        if (bookSol1GetPath(maze, maze.length - 1, maze[0].length - 1, path)) {
+            return path;
+        }
+        return null;
+    }
+
+    boolean bookSol1GetPath(boolean[][] maze, int row, int col, ArrayList<Point> path) {
+        // If out of bounds or not available, return
+        if (col < 0 || row < 0 || !maze[row][col]) {
+            return false;
+        }
+
+        boolean isAtOrigin = (row == 0) && (col == 0);
+
+        // If there is a path from the start to here, add my location
+        if (isAtOrigin || bookSol1GetPath(maze, row, col - 1, path) || bookSol1GetPath(maze, row - 1, col, path)) {
+            Point p = new Point(row, col);
+            path.add(p);
+            return true;
+        }
+        return false;
+    }
+
+    @Test
+    public void testBookSol1GetPath1() {
+        // Given
+        boolean[][]maze = new boolean[1][1];
+        maze[0][0] = true;
+
+        // When
+        List<Point> path = bookSol1GetPath(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        assertEquals(expected, path);
+    }
+
+    @Test
+    public void testBookSol1GetPath2() {
+        // Given
+        // Maze       [[ t, f ]
+        //             [ t, t ]]
+        boolean[][]maze = new boolean[2][2];
+        maze[0][0] = true;
+        maze[0][1] = false;
+        maze[1][0] = true;
+        maze[1][1] = true;
+
+        // When
+        List<Point> path = bookSol1GetPath(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        expected.add(new Point(1, 0));
+        expected.add(new Point(1, 1));
+        assertEquals(expected, path);
+    }
+
+    @Test
+    public void testBookSol1GetPath3() {
+        // Given
+        // Maze       [[ t, f, t ]
+        //             [ t, t, t ]]
+        boolean[][]maze = new boolean[2][3];
+        maze[0][0] = true;
+        maze[0][1] = false;
+        maze[0][2] = true;
+        maze[1][0] = true;
+        maze[1][1] = true;
+        maze[1][2] = true;
+
+        // When
+        List<Point> path = bookSol1GetPath(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        expected.add(new Point(1, 0));
+        expected.add(new Point(1, 1));
+        expected.add(new Point(1, 2));
+        assertEquals(expected, path);
+    }
+
+    @Test
+    public void testBookSol1GetPath4() {
+        // Given
+        // Maze       [[ t, t, t ]
+        //             [ t, f, t ]]
+        boolean[][]maze = new boolean[2][3];
+        maze[0][0] = true;
+        maze[0][1] = true;
+        maze[0][2] = true;
+        maze[1][0] = true;
+        maze[1][1] = false;
+        maze[1][2] = true;
+
+        // When
+        List<Point> path = bookSol1GetPath(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        expected.add(new Point(0, 1));
+        expected.add(new Point(0, 2));
+        expected.add(new Point(1, 2));
+        assertEquals(expected, path);
+    }
+
+    /**
+     * Book solution 2 - More efficient
+     *
+     * Remove duplicated work
+     * We are visiting the same squad many times
+     * O(rc)
+     */
+    ArrayList<Point> bookSol2GetPath(boolean[][] maze) {
+        if (maze == null || maze.length == 0) return null;
+        ArrayList<Point> path = new ArrayList<>();
+        HashSet<Point> failedPoints = new HashSet<>();
+        if (bookSol2GetPath(maze, maze.length - 1, maze[0].length - 1, path, failedPoints)) {
+            return path;
+        }
+        return null;
+    }
+
+    boolean bookSol2GetPath(boolean[][] maze, int row, int col, ArrayList<Point> path, HashSet<Point> failedPoints) {
+        // If out of bounds or not available return
+        if (col < 0 || row < 0 || !maze[row][col]) {
+            return false;
+        }
+
+        Point p = new Point(row, col);
+
+        // If we've already visited this cell, return
+        if (failedPoints.contains(p)) {
+            return false;
+        }
+
+        boolean isAtOrigin = (row == 0) && (col == 0);
+
+        // If there's a path from start to my current location, add my location
+        if (isAtOrigin || bookSol2GetPath(maze, row, col - 1, path, failedPoints) ||
+                bookSol2GetPath(maze, row - 1, col, path, failedPoints)) {
+            path.add(p);
+            return true;
+        }
+
+        failedPoints.add(p); // Cache the result
+        return false;
+    }
+
+    @Test
+    public void testBookSol2GetPath1() {
+        // Given
+        boolean[][]maze = new boolean[1][1];
+        maze[0][0] = true;
+
+        // When
+        List<Point> path = bookSol2GetPath(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        assertEquals(expected, path);
+    }
+
+    @Test
+    public void testBookSol2GetPath2() {
+        // Given
+        // Maze       [[ t, f ]
+        //             [ t, t ]]
+        boolean[][]maze = new boolean[2][2];
+        maze[0][0] = true;
+        maze[0][1] = false;
+        maze[1][0] = true;
+        maze[1][1] = true;
+
+        // When
+        List<Point> path = bookSol2GetPath(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        expected.add(new Point(1, 0));
+        expected.add(new Point(1, 1));
+        assertEquals(expected, path);
+    }
+
+    @Test
+    public void testBookSol2GetPath3() {
+        // Given
+        // Maze       [[ t, f, t ]
+        //             [ t, t, t ]]
+        boolean[][]maze = new boolean[2][3];
+        maze[0][0] = true;
+        maze[0][1] = false;
+        maze[0][2] = true;
+        maze[1][0] = true;
+        maze[1][1] = true;
+        maze[1][2] = true;
+
+        // When
+        List<Point> path = bookSol2GetPath(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        expected.add(new Point(1, 0));
+        expected.add(new Point(1, 1));
+        expected.add(new Point(1, 2));
+        assertEquals(expected, path);
+    }
+
+    @Test
+    public void testBookSol2GetPath4() {
+        // Given
+        // Maze       [[ t, t, t ]
+        //             [ t, f, t ]]
+        boolean[][]maze = new boolean[2][3];
+        maze[0][0] = true;
+        maze[0][1] = true;
+        maze[0][2] = true;
+        maze[1][0] = true;
+        maze[1][1] = false;
+        maze[1][2] = true;
+
+        // When
+        List<Point> path = bookSol2GetPath(maze);
+
+        // Then
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(0, 0));
+        expected.add(new Point(0, 1));
+        expected.add(new Point(0, 2));
+        expected.add(new Point(1, 2));
+        assertEquals(expected, path);
+    }
+
 
 }
